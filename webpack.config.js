@@ -1,7 +1,15 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin(),
+      new OptimizeCssAssetsPlugin({})
+    ]
+  },
   module: {
     rules: [
       {
@@ -24,13 +32,21 @@ module.exports = {
         ]
       },
       {
-        test: /\.scss$/,
+        test: /\.(sa|sc|c)ss$/,
+        //test: /\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
           "css-loader",
           "postcss-loader",
           "sass-loader"
         ]
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
       }
     ]
   },
